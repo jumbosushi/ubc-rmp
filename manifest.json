@@ -1,0 +1,39 @@
+{
+  "name": "UBC-RMP",
+  "version": "1.0",
+  "description": "Shows UBC pro's Rate My Prof on SSC",
+  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "background": {
+    "scripts": ["src/js/background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://courses.students.ubc.ca/cs/*"],
+      "css": ["src/css/contentStyle.css"],
+      "js": [
+        "src/js/contentScript.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    "src/js/*"
+  ],
+  "options_page": "src/html/options.html",
+  "page_action": {
+    "default_popup": "src/html/popup.html",
+    "default_icon": {
+      "16": "images/get_started16.png",
+      "32": "images/get_started32.png",
+      "48": "images/get_started48.png",
+      "128": "images/get_started128.png"
+    }
+  },
+  "icons": {
+    "16": "images/get_started16.png",
+    "32": "images/get_started32.png",
+    "48": "images/get_started48.png",
+    "128": "images/get_started128.png"
+  },
+  "manifest_version": 2
+}
