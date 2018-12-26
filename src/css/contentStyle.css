@@ -1,7 +1,15 @@
 .ubc-rmp-true {
-  color: green !important;
+  color: #21ce59 !important;
 }
 
 .ubc-rmp-false {
   color: red !important;
+}
+
+.blink-loader {
+  animation: blinker 0.8s linear infinite;
+}
+
+@keyframes blinker {
+  50% { opacity: 0.1; }
 }

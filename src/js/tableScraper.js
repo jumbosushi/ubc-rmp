@@ -1,5 +1,5 @@
-import RateMyProf from './rmp.js'
-const RMP = new RateMyProf()
+import RMP from './rmp.js'
+import Fetcher from './fetchWrapper.js'
 
 class Professor {
   constructor(name, rating) {
@@ -9,11 +9,24 @@ class Professor {
 }
 
 class TableScraper {
-
   constructor() {
     this.rows =  document.getElementsByClassName("table table-striped section-summary")[0].rows
     this.lectureRows = {}
+    this.lectureURLtoRowNum = {}
     this.ratings = {}
+  }
+
+  // True script found data for given lecture row
+  isLectureRowWithData(rowNum) {
+    return this.lectureRows[rowNum] != null
+  }
+
+  serializeLectureStats(rowNum) {
+  let stat = this.lectureRows[rowNum]
+  return `Name: ${stat.name}\n\
+          Overall: ${stat.over_all}\n\
+          Difficulty: ${stat.difficulty}\n\
+          Would Take Again: ${stat.would_take_again}`
   }
 
   isLecture(i) {
@@ -22,17 +35,6 @@ class TableScraper {
 
   getLectureURL(i) {
     return this.rows[i].cells[1].getElementsByTagName('a')[0].href
-  }
-
-  fetchPageHTML(html) {
-    return new Promise((resolve, reject) => {
-      // Only interested in html file, not other types
-      const htmlOption = { headers: { "Content-Type": "text/html" }}
-      fetch(html, htmlOption)
-        .then(resp => resp.text())
-        .then(html => resolve(html))
-        .catch(err => reject(err))
-    })
   }
 
   htmlToElement(html) {
@@ -56,35 +58,47 @@ class TableScraper {
     }
   }
 
-  getLecturProfNamesPromises() {
+  getLectureRowNumbers() {
+    let numbers = []
+    for (var i = 1; i < this.rows.length; i++) {
+      if (this.isLecture(i)) {
+        numbers.push(i)
+      }
+    }
+    return numbers
+  }
+
+  setLectureURLtoRowNum() {
+    for (var i = 1; i < this.rows.length; i++) {
+      if (this.isLecture(i)) {
+        const lectureUrl = this.getLectureURL(i)
+        // Temp save url and i
+        // This is because Promise won't let i be saved in its instance
+        this.lectureURLtoRowNum[lectureUrl] = i
+      }
+    }
+  }
+
+  fetchProfName(lectureUrl) {
+    return new Promise((resolve, reject) => {
+      Fetcher.fetchDOM(lectureUrl)
+        .then(dom => {
+          let name = this.getProfNameFromDOM(dom)
+
+          var lectureRowNum = this.lectureURLtoRowNum[lectureUrl]
+          this.lectureRows[lectureRowNum] = name
+
+          resolve(name)
+        })
+    })
+  }
+
+  getLectureProfNamesPromises() {
     return new Promise((resolve, reject) => {
       let promises = []
-      for (var i = 1; i < this.rows.length; i++) {
-        if (this.isLecture(i)) {
-          const lectureUrl = this.getLectureURL(i)
-          // Temp save url and i
-          // This is because Promise won't let i be saved in its instance
-          this.lectureRows[lectureUrl] = i
-
-          promises.push(new Promise((inner_resolve, inner_reject) => {
-            this.fetchPageHTML(lectureUrl)
-              .then(html => {
-                const dom = this.htmlToElement(html)
-                let name = this.getProfNameFromDOM(dom)
-
-                // TODO: Change this hacky solution
-                // Change so that lectureRows will be {i: name}
-                var temp_i = this.lectureRows[lectureUrl]
-                delete this.lectureRows[lectureUrl]
-                this.lectureRows[temp_i] = name
-
-                console.log("DONE 1")
-
-                inner_resolve(this.getProfNameFromDOM(dom))
-              })
-          }))
-        }
-      }
+      Object.keys(this.lectureURLtoRowNum).map(lectureUrl => {
+        promises.push(this.fetchProfName(lectureUrl))
+      })
       resolve(promises)
     })
   }
@@ -103,7 +117,6 @@ class TableScraper {
                 })
             }))
           })
-          console.log("DONE 2")
           resolve(promises)
         })
     })
@@ -111,7 +124,8 @@ class TableScraper {
 
   fetchProfRatings() {
     return new Promise((resolve, reject) => {
-      this.getLecturProfNamesPromises()
+      this.setLectureURLtoRowNum()
+      this.getLectureProfNamesPromises()
         .then(lectureFetchPromises => {
           return this.getProfRatingPromises(lectureFetchPromises)
         })
@@ -124,26 +138,28 @@ class TableScraper {
       })
   }
 
+  getProfStatPromises(ratings) {
+    return ratings.map(prof => {
+      if (RMP.isValidProf(prof.rating)) {
+        // Update rating to be prof obj
+        let profObj = RMP.getProfObj(prof.rating)
+        return RMP.fetchProfStats(profObj.pk_id)
+      } else {
+        // If prof profile not in RMP, set null
+        Object.keys(this.lectureRows).map((i) => {
+          if (this.lectureRows[i] == prof.name) {
+            this.lectureRows[i] = null
+          }
+        })
+      }
+    })
+  }
+
   setRatings() {
     return new Promise((resolve, reject) => {
       this.fetchProfRatings()
         .then(ratings => {
-          let profStatPromises = []
-
-          ratings.map(prof => {
-            if (RMP.isValidProf(prof.rating)) {
-              // Update rating to be prof obj
-              let profObj = RMP.getProfObj(prof.rating)
-              profStatPromises.push(RMP.fetchProfStats(profObj.pk_id))
-            } else {
-              // If prof profile not in RMP, set null
-              Object.keys(this.lectureRows).map((i) => {
-                if (this.lectureRows[i] == prof.name) {
-                  this.lectureRows[i] = null
-                }
-              })
-            }
-          })
+          let profStatPromises = this.getProfStatPromises(ratings)
 
           if (profStatPromises.length == 0) {
             // If no prof on RMP return on the spot
@@ -156,7 +172,7 @@ class TableScraper {
                 // Make lecture Rows be {i: Professor}
                 stats.map(stat => {
                   keys.map((i) => {
-                    if (this.lectureRows[i] == stat.name) {
+                    if (stat && this.lectureRows[i] == stat.name) {
                       this.lectureRows[i] = stat
                     }
                   })
@@ -169,4 +185,4 @@ class TableScraper {
   }
 }
 
-export default TableScraper
+export default new TableScraper()

@@ -1,3 +1,5 @@
+import Fetcher from './fetchWrapper.js'
+
 class RateMyProf {
   getProfNameSearchUrl(name) {
     return `https://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&q=${name}&defType=edismax&qf=teacherfirstname_t^2000+teacherlastname_t^2000+teacherfullname_t^2000+autosuggest&bf=pow(total_number_of_ratings_i,1.7)&sort=score+desc&siteName=rmp&group=on&group.field=content_type_s&group.limit=20`
@@ -7,37 +9,11 @@ class RateMyProf {
     return document.createRange().createContextualFragment(html)
   }
 
-  corsFetch(url, method) {
-    const urlProxy = 'https://cors-anywhere.herokuapp.com/'
-    const requestURL = urlProxy + url
-    return new Promise((resolve, reject) => {
-     fetch(requestURL, {
-        method: method,
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Origin': '*',
-          'Access-Control-Allow-Headers': '*',
-          'Access-Control-Allow-Origin': '*',
-        }
-      })
-      .then(res => {
-        return res.text()
-      })
-      .then(res_in_str => {
-        resolve(res_in_str)
-      })
-      .catch(err => {
-        reject(err)
-      })
-    })
-  }
-
   fetchProfRating(name) {
     return new Promise((resolve, reject) => {
       // Go through proxy to overcome chrome extension CORS policy
       const searchUrl = this.getProfNameSearchUrl(name)
-      this.corsFetch(searchUrl, 'GET')
+      Fetcher.corsFetch(searchUrl, 'GET')
         .then(res_in_str => {
           resolve(this.rmpStrToJson(res_in_str))
         })
@@ -79,9 +55,9 @@ class RateMyProf {
   fetchProfStats(profId) {
     return new Promise((resolve, reject) => {
       let profUrl = `https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${profId}`
-      this.corsFetch(profUrl, 'GET')
-        .then(res_in_str => {
-          resolve(this.getProfStat(res_in_str, profUrl))
+      Fetcher.corsFetch(profUrl, 'GET')
+        .then(html => {
+          resolve(this.getProfStat(html, profUrl))
         })
     })
   }
@@ -90,6 +66,7 @@ class RateMyProf {
     const dom = this.htmlToElement(html)
     let first = dom.querySelector(".pfname").innerText.trim().toUpperCase()
     let last = dom.querySelector(".plname").innerText.trim().toUpperCase()
+
     const name = `${first} ${last}`
     const ratingBreakdown = dom.querySelectorAll(".rating-breakdown")[0]
     const grades = ratingBreakdown.querySelectorAll(".grade")
@@ -103,4 +80,4 @@ class RateMyProf {
   }
 }
 
-export default RateMyProf
+export default new RateMyProf()

@@ -1,30 +1,46 @@
-import TableScraper from "./tableScraper.js"
-const Scraper = new TableScraper()
+import Scraper from './tableScraper.js'
+import Loader from './loader.js'
+
+function isSubjectCoursePage() {
+  let urlParams = new URLSearchParams(window.location.href)
+  return urlParams.get('tname') == "subj-course"
+}
 
 export function main() {
-  // Do what you want
-  // Add pop up
+  // Abort if not in subject course page
+  if (!isSubjectCoursePage) { return }
+
+  Loader.set()
+
   Scraper.setRatings()
     .then(() => {
+      Loader.clear()
       Object.keys(Scraper.lectureRows).map(i => {
-        let cell = Scraper.rows[i].cells[2]
-        if (Scraper.lectureRows[i] != null) {
-          cell.classList.add('ubc-rmp-true')
-          cell.addEventListener("mouseenter", (event) => {
+        // Add new if method here to check the state
+        let sectionLinkElement = Scraper.rows[i].cells[1].children[0]
+        if (Scraper.isLectureRowWithData(i)) {
+          sectionLinkElement.classList.add('ubc-rmp-true')
+          sectionLinkElement.setAttribute('tooltip', Scraper.serializeLectureStats(i))
+
+          sectionLinkElement.addEventListener("mouseenter", (event) => {
             // show pop up
           })
-          cell.addEventListener("mouseleave", (event) => {
+          sectionLinkElement.addEventListener("mouseleave", (event) => {
           })
         } else {
-          cell.classList.add('ubc-rmp-false')
-          cell.addEventListener("mouseenter", (event) => {
+          sectionLinkElement.classList.add('ubc-rmp-false')
+          sectionLinkElement.addEventListener("mouseenter", (event) => {
             // show pop up
            })
-          cell.addEventListener("mouseleave", (event) => {
+          sectionLinkElement.addEventListener("mouseleave", (event) => {
             // hide pop up
           })
         }
       })
+    })
+    .catch(e => {
+      // TODO: Make text red + add error msg
+      Loader.clear()
     })
 }
 
