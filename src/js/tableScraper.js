@@ -21,6 +21,10 @@ class TableScraper {
     return this.lectureRows[rowNum] != null
   }
 
+  getLectureRowRating(i) {
+    return this.lectureRows[i]
+  }
+
   serializeLectureStats(rowNum) {
   let stat = this.lectureRows[rowNum]
   return `Name: ${stat.name}\n\
@@ -29,20 +33,24 @@ class TableScraper {
           Would Take Again: ${stat.would_take_again}`
   }
 
-  getLectureRowRating(i) {
-    return this.lectureRows[i]
-  }
-
   isLecture(i) {
-    return this.rows[i].cells[2].innerText == "Lecture"
+    let section = this.rows[i].cells[1].innerText
+    let activity = this.rows[i].cells[2].innerText
+    return activity.includes("Lecture") && section != ""
   }
 
   getLectureURL(i) {
     return this.rows[i].cells[1].getElementsByTagName('a')[0].href
   }
 
-  htmlToElement(html) {
-    return document.createRange().createContextualFragment(html)
+  getLectureRowNumbers() {
+    let numbers = []
+    for (var i = 1; i < this.rows.length; i++) {
+      if (this.isLecture(i)) {
+        numbers.push(i)
+      }
+    }
+    return numbers
   }
 
   getProfNameFromDOM(dom) {
@@ -70,16 +78,6 @@ class TableScraper {
     } else {
       throw "Name not in class page"
     }
-  }
-
-  getLectureRowNumbers() {
-    let numbers = []
-    for (var i = 1; i < this.rows.length; i++) {
-      if (this.isLecture(i)) {
-        numbers.push(i)
-      }
-    }
-    return numbers
   }
 
   setLectureURLtoRowNum() {

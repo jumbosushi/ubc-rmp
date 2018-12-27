@@ -5,14 +5,11 @@ class RateMyProf {
     return `https://search.mtvnservices.com/typeahead/suggest/?solrformat=true&rows=20&callback=noCB&q=${name}&defType=edismax&qf=teacherfirstname_t^2000+teacherlastname_t^2000+teacherfullname_t^2000+autosuggest&bf=pow(total_number_of_ratings_i,1.7)&sort=score+desc&siteName=rmp&group=on&group.field=content_type_s&group.limit=20`
   }
 
-  htmlToElement(html) {
-    return document.createRange().createContextualFragment(html)
-  }
-
   fetchProfRating(name) {
     return new Promise((resolve, reject) => {
       // Go through proxy to overcome chrome extension CORS policy
       const searchUrl = this.getProfNameSearchUrl(name)
+      console.log(searchUrl)
       Fetcher.corsFetch(searchUrl, 'GET')
         .then(res_in_str => {
           resolve(this.rmpStrToJson(res_in_str))
@@ -63,7 +60,7 @@ class RateMyProf {
   }
 
   getProfStat(html, profUrl) {
-    const dom = this.htmlToElement(html)
+    const dom = Fetcher.htmlToElement(html)
     let first = dom.querySelector(".pfname").innerText.trim().toUpperCase()
     let last = dom.querySelector(".plname").innerText.trim().toUpperCase()
 
