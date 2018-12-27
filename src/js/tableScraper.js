@@ -29,6 +29,10 @@ class TableScraper {
           Would Take Again: ${stat.would_take_again}`
   }
 
+  getLectureRowRating(i) {
+    return this.lectureRows[i]
+  }
+
   isLecture(i) {
     return this.rows[i].cells[2].innerText == "Lecture"
   }
@@ -49,7 +53,17 @@ class TableScraper {
       return `${separated[1]} ${separated[0]}`
     }
 
-    let profName = dom.querySelectorAll("table")[2].rows[0].cells[1].innerText
+    function isLoggedIn() {
+      return document.querySelectorAll("form").length == 4
+    }
+
+    // If user is logged in, page injects additional form into the page
+    // Hence, we need to change table index depending on login state
+    //
+    // One way to detect login state is to check if number of forms in the page
+    // If there are 4 forms, the user is logged in
+    let profNameTableIndex = isLoggedIn() ? 3 : 2
+    let profName = dom.querySelectorAll("table")[profNameTableIndex].rows[0].cells[1].innerText
 
     if (profName) {
       return flipName(profName)

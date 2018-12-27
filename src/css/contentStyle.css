@@ -13,3 +13,18 @@
 @keyframes blinker {
   50% { opacity: 0.1; }
 }
+
+.ubc-rmp-wrapper {
+  display: none;
+}
+
+div[id^="ubc-rmp-template"] {
+  font-family: "Courier New";
+  text-align: left;
+  color: black;
+  display: inline-block;
+  width: auto;
+  height: auto;
+  padding: 5px 15px 5px 15px;
+  background: #d7e0e7;
+}

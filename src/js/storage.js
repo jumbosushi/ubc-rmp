@@ -17,7 +17,6 @@ class Storage {
         if (this.isEmptyObject(result)) { reject("No cache found") }
 
         Object.keys(result).map(key => {
-          console.log(result[key])
           resolve(result[key])
         })
       })
