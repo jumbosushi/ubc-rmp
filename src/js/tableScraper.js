@@ -8,6 +8,7 @@ class Professor {
   }
 }
 
+// TODO: Make class less bloated
 class TableScraper {
   constructor() {
     this.rows =  document.getElementsByClassName("table table-striped section-summary")[0].rows
@@ -36,6 +37,7 @@ class TableScraper {
   isLecture(i) {
     let section = this.rows[i].cells[1].innerText
     let activity = this.rows[i].cells[2].innerText
+    // TODO: Include distance education
     return activity.includes("Lecture") && section != ""
   }
 
@@ -70,8 +72,7 @@ class TableScraper {
     //
     // One way to detect login state is to check if number of forms in the page
     // If there are 4 forms, the user is logged in
-    let profNameTableIndex = isLoggedIn() ? 3 : 2
-    let profName = dom.querySelectorAll("table")[profNameTableIndex].rows[0].cells[1].innerText
+    let profName = dom.querySelectorAll("table")[2].rows[0].cells[1].innerText
 
     if (profName) {
       return flipName(profName)

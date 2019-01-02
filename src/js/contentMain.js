@@ -1,6 +1,7 @@
 import Scraper from './tableScraper.js'
 import Loader from './loader.js'
 import Storage from './storage.js'
+import Fetcher from './fetchWrapper.js'
 
 function isSubjectCoursePage() {
   let urlParams = new URLSearchParams(window.location.href)
@@ -94,6 +95,7 @@ export function main() {
       Loader.clear()
       Scraper.lectureRows = lectureRows
       setClass()
+      Fetcher.fetchReLogin()
     })
     .catch(err => {
       Scraper.setRatings()
@@ -101,6 +103,7 @@ export function main() {
           Loader.clear()
           Storage.set({ [courseName]: Scraper.lectureRows })
           setClass()
+          Fetcher.fetchReLogin()
         })
     })
 }

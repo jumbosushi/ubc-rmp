@@ -1,6 +1,6 @@
 class FetchWrapper {
   corsFetch(url, method) {
-    const urlProxy = 'https://cors-anywhere.herokuapp.com/'
+    const urlProxy = 'https://ubc-rmp.herokuapp.com/'
     const requestURL = urlProxy + url
     return new Promise((resolve, reject) => {
      fetch(requestURL, {
@@ -29,12 +29,26 @@ class FetchWrapper {
     return document.createRange().createContextualFragment(html)
   }
 
+  // TODO: Doesn't work
+  fetchReLogin() {
+    let loginLink = "https://cas.id.ubc.ca/ubc-cas/login"
+    console.log("==== RELOGIN ====")
+    fetch(loginLink)
+      .then(res => {
+        debugger
+      })
+      .catch(err => {
+        debugger
+        console.log(err)
+      })
+  }
+
   fetchPageHTML(html) {
     return new Promise((resolve, reject) => {
       // Only interested in html file, not other types
       const htmlOption = { headers: { "Content-Type": "text/html" }}
-      fetch(html, htmlOption)
-        .then(resp => resp.text())
+      console.log('cors now')
+      this.corsFetch(html, 'GET')
         .then(html => resolve(html))
         .catch(err => reject(err))
     })
