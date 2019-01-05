@@ -1,6 +1,6 @@
 {
   "name": "UBC-RMP",
-  "version": "1.0",
+  "version": "0.0.1",
   "description": "Shows UBC pro's Rate My Prof on SSC",
   "permissions": ["activeTab", "declarativeContent", "storage"],
   "background": {
