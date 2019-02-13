@@ -81,11 +81,36 @@ function setClass() {
   tippyAppendTemplate()
 }
 
+function loadJSON(path, success, error) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function()
+    {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                if (success)
+                    success(JSON.parse(xhr.responseText));
+            } else {
+                if (error)
+                    error(xhr);
+            }
+        }
+    };
+    let fullPath = chrome.extension.getURL(path)
+    xhr.open("GET", fullPath, true);
+    xhr.send();
+}
+
 export function main() {
   // Abort if not in subject course page
   if (!isSubjectCoursePage) { return }
 
   const courseName = getCourseName()
+  console.log("==== START THE READ")
+  loadJSON("src/data/filledInstrData.json",
+    function(data) { console.log(data["1009612"]); },
+    function(xhr) { console.error(xhr); }
+  )
+  console.log("==== END OF THE READ")
   Loader.set()
   // Uncomment to test cache
   Storage.remove(courseName)

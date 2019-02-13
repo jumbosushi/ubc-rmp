@@ -18,7 +18,8 @@
     }
   ],
   "web_accessible_resources": [
-    "src/js/*"
+    "src/js/*",
+    "src/data/*"
   ],
   "options_page": "src/html/options.html",
   "page_action": {
