@@ -1,6 +1,3 @@
-import RMP from './rmp.js'
-import Fetcher from './fetchWrapper.js'
-
 class Professor {
   constructor(name, rating) {
     this.name = name;
@@ -17,7 +14,7 @@ class TableScraper {
     this.ratings = {}
   }
 
-  // True script found data for given lecture row
+  // True if found data for given lecture row
   isLectureRowWithData(rowNum) {
     return this.lectureRows[rowNum] != null
   }
@@ -90,111 +87,6 @@ class TableScraper {
         this.lectureURLtoRowNum[lectureUrl] = i
       }
     }
-  }
-
-  fetchProfName(lectureUrl) {
-    return new Promise((resolve, reject) => {
-      Fetcher.fetchDOM(lectureUrl)
-        .then(dom => {
-          let name = this.getProfNameFromDOM(dom)
-
-          var lectureRowNum = this.lectureURLtoRowNum[lectureUrl]
-          this.lectureRows[lectureRowNum] = name
-
-          resolve(name)
-        })
-    })
-  }
-
-  getLectureProfNamesPromises() {
-    return new Promise((resolve, reject) => {
-      let promises = []
-      Object.keys(this.lectureURLtoRowNum).map(lectureUrl => {
-        promises.push(this.fetchProfName(lectureUrl))
-      })
-      resolve(promises)
-    })
-  }
-
-  getProfRatingPromises(lectureFetchPromises) {
-    let promises = []
-    return new Promise((resolve, reject) => {
-      Promise.all(lectureFetchPromises)
-        .then(names => {
-          let uniqueNames = Array.from(new Set(names))
-          uniqueNames.map(name => {
-            promises.push(new Promise((inner_resolve, reject) => {
-              RMP.fetchProfRating(name)
-                .then(rating => {
-                  inner_resolve(new Professor(name, rating))
-                })
-            }))
-          })
-          resolve(promises)
-        })
-    })
-  }
-
-  fetchProfRatings() {
-    return new Promise((resolve, reject) => {
-      this.setLectureURLtoRowNum()
-      this.getLectureProfNamesPromises()
-        .then(lectureFetchPromises => {
-          return this.getProfRatingPromises(lectureFetchPromises)
-        })
-        .then(rmpFetchPromises => {
-          return Promise.all(rmpFetchPromises)
-        })
-        .then(ratings => {
-          resolve(ratings)
-        })
-      })
-  }
-
-  getProfStatPromises(ratings) {
-    return ratings.map(prof => {
-      if (RMP.isValidProf(prof.rating)) {
-        // Update rating to be prof obj
-        let profObj = RMP.getProfObj(prof.rating)
-        return RMP.fetchProfStats(profObj.pk_id)
-      } else {
-        // If prof profile not in RMP, set null
-        Object.keys(this.lectureRows).map((i) => {
-          if (this.lectureRows[i] == prof.name) {
-            this.lectureRows[i] = null
-          }
-        })
-      }
-    })
-  }
-
-  setRatings() {
-    return new Promise((resolve, reject) => {
-      this.fetchProfRatings()
-        .then(ratings => {
-          let profStatPromises = this.getProfStatPromises(ratings)
-
-          if (profStatPromises.length == 0) {
-            // If no prof on RMP return on the spot
-            resolve()
-          } else {
-            // If prof on RMP, scrape the stats
-            Promise.all(profStatPromises)
-              .then(stats => {
-                const keys = Object.keys(this.lectureRows)
-                // Make lecture Rows be {i: Professor}
-                stats.map(stat => {
-                  keys.map((i) => {
-                    if (stat && this.lectureRows[i] == stat.name) {
-                      this.lectureRows[i] = stat
-                    }
-                  })
-                })
-                resolve()
-              })
-            }
-        })
-    })
   }
 }
 

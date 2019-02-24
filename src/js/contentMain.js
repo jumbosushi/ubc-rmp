@@ -2,6 +2,7 @@ import Scraper from './tableScraper.js'
 import Loader from './loader.js'
 import Storage from './storage.js'
 import Fetcher from './fetchWrapper.js'
+import RatingData from './ratingData.js'
 
 function isSubjectCoursePage() {
   let urlParams = new URLSearchParams(window.location.href)
@@ -74,62 +75,23 @@ function setClass() {
     } else {
       sectionLinkElement.classList.add('ubc-rmp-link', 'ubc-rmp-false')
       sectionLinkElement.setAttribute("data-template", templateId)
-      appendFalseTemplate(templateId)
     }
   })
 
   tippyAppendTemplate()
 }
 
-function loadJSON(path, success, error) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function()
-    {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                if (success)
-                    success(JSON.parse(xhr.responseText));
-            } else {
-                if (error)
-                    error(xhr);
-            }
-        }
-    };
-    let fullPath = chrome.extension.getURL(path)
-    xhr.open("GET", fullPath, true);
-    xhr.send();
-}
+// 1. Make it work in section index page
+// 2. Make it work in individual section page
 
 export function main() {
   // Abort if not in subject course page
   if (!isSubjectCoursePage) { return }
 
   const courseName = getCourseName()
-  console.log("==== START THE READ")
-  loadJSON("src/data/filledInstrData.json",
-    function(data) { console.log(data["1009612"]); },
-    function(xhr) { console.error(xhr); }
-  )
-  console.log("==== END OF THE READ")
-  Loader.set()
-  // Uncomment to test cache
-  Storage.remove(courseName)
-
-  Storage.get(courseName)
-    .then(lectureRows => {
-      Loader.clear()
-      Scraper.lectureRows = lectureRows
-      setClass()
-      Fetcher.fetchReLogin()
-    })
-    .catch(err => {
-      Scraper.setRatings()
-        .then(() => {
-          Loader.clear()
-          Storage.set({ [courseName]: Scraper.lectureRows })
-          setClass()
-          Fetcher.fetchReLogin()
-        })
-    })
+  const ratingData = new RatingData()
+  // Loader.set()
+  // Loader.clear()
+  setClass()
 }
 
