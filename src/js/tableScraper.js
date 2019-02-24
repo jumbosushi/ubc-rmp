@@ -1,10 +1,3 @@
-class Professor {
-  constructor(name, rating) {
-    this.name = name;
-    this.rating = rating;
-  }
-}
-
 // TODO: Make class less bloated
 class TableScraper {
   constructor() {
