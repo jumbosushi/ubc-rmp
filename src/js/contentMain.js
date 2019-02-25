@@ -1,7 +1,6 @@
 import Scraper from './tableScraper.js'
 import Loader from './loader.js'
 import Storage from './storage.js'
-import Fetcher from './fetchWrapper.js'
 import RatingData from './ratingData.js'
 
 function isSubjectCoursePage() {
@@ -90,6 +89,11 @@ export function main() {
 
   const courseName = getCourseName()
   const ratingData = new RatingData()
+  ratingData.loadJSON()
+    .then()
+    .catch()
+  console.log("<<<< main")
+  console.log(ratingData.json[622532])
   // Loader.set()
   // Loader.clear()
   setClass()

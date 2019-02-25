@@ -1,33 +1,25 @@
 class RatingData {
   constructor() {
-    this.json = {}
-
     // TODO: Make this load from /data once webpack is configured
     // Takes roughly 1.2 ms to load this
-    this.loadJSON("src/data/filledInstrData.json",
-      function(data) { this.json = data; },
-      function(xhr) { console.error(xhr); }
-    )
+    this.json = {}
   }
 
   // Load JSON data as JS Object
-  loadJSON(path, success, error) {
-    var xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = function()
-      {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            if (success)
-              success(JSON.parse(xhr.responseText))
-          } else {
-            if (error)
-              error(xhr)
-            }
-        }
-      };
+  loadJSON(success, error) {
+    return new Promise((resolve, reject) => {
+      let path = "src/data/filledInstrData.json"
       let fullPath = chrome.extension.getURL(path)
-      xhr.open("GET", fullPath, true)
-      xhr.send()
+
+      fetch(fullPath)
+        .then(data => {
+          data.json().then(jsonObj => {
+            this.json = jsonObj
+            resolve(jsonObj)
+          })
+        })
+        .catch(err => reject(err))
+    })
   }
 
   // TODO :Decide to keep this or not
