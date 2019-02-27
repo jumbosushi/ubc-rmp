@@ -2,7 +2,8 @@ import Scraper from './tableScraper.js'
 
 class Loader {
   constructor() {
-    let lectureRowNumbers = Scraper.getLectureRowNumbers()
+    let lectureRows = Scraper.getLectureRows()
+    let lectureRowNumbers = Object.keys(lectureRows)
     let links = lectureRowNumbers.map(i => {
       return Scraper.rows[i].cells[1].children[0]
     })

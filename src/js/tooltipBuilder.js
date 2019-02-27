@@ -43,7 +43,6 @@ class TooltipBuilder {
   }
 
   getProfStat(section) {
-    console.log("WUT")
     let rating = this.getRating(section)
 
     let would_take_again_str
@@ -59,7 +58,6 @@ class TooltipBuilder {
         would_take_again_str = rating.would_take_again
     }
 
-    // TODO: FIX TYPO
     let result = {
       name:              rating.name,
       over_all:          rating.overall,
