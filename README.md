@@ -4,21 +4,6 @@
 
 Browser extension for UBC course registration to let students access Rate My Prof info easier. Caches the response per course.
 
-## Problem 
-
-Typical workflow of a UBC student is:
-1. Open one of the lectures in a new tab
-2. Copy the professor name
-3. Paste into Rate My Prof (RMP)
-4. Add / Don't add the course to the worklist
-5. Repeat
-
-Searching for RMP info of the prof gets time consuming real fast.
-
-## Solution
-
-Expose RMP Professor data on course index page via cursor hover on lecture link
-
 ## Usage
 
 1. Clone the repo
@@ -26,12 +11,16 @@ Expose RMP Professor data on course index page via cursor hover on lecture link
 3. Enable Developer Mode via a toggle
 4. Unpack the extension by selecting the cloned dir
 
-## Bug
-:warning: **The app somehow makes the user log out after data load** :warning:
+## Why?
 
-![wut](https://user-images.githubusercontent.com/9669739/50721130-fa1a8600-106e-11e9-8489-af8c4db8a804.gif)
+A typical workflow of a UBC student when registering a course is:
+1. Open one of the sections in a new tab
+2. Copy the professor name
+3. Paste it into Rate My Prof (RMP) search box
+4. Review ratings
+4. Decide to add the course or not to the schedule
+5. Repeat
 
-When catching is disabled ssc somehow log the user out.  
-Currently searching for a fix
+Searching for RMP info gets time consuming real fast.
 
-
+This extension exposes RMP Professor data on course index page via cursor hover on lecture link.
