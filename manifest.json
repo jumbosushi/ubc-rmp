@@ -2,7 +2,7 @@
   "name": "UBC-RMP",
   "version": "0.0.1",
   "description": "Shows UBC pro's Rate My Prof on SSC",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "permissions": ["activeTab", "declarativeContent"],
   "background": {
     "scripts": ["src/js/background.js"],
     "persistent": false
