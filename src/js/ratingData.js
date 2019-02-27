@@ -2,19 +2,20 @@ class RatingData {
   constructor() {
     // TODO: Make this load from /data once webpack is configured
     // Takes roughly 1.2 ms to load this
-    this.json = {}
+    this.courseJSON = {}
+    this.ratingJSON = {}
   }
 
-  // Load JSON data as JS Object
-  loadJSON(success, error) {
+  loadCourseToInstr() {
+    let path = "src/data/courseToInstrID.json"
+
     return new Promise((resolve, reject) => {
-      let path = "src/data/filledInstrData.json"
       let fullPath = chrome.extension.getURL(path)
 
       fetch(fullPath)
         .then(data => {
           data.json().then(jsonObj => {
-            this.json = jsonObj
+            this.courseJSON = jsonObj
             resolve(jsonObj)
           })
         })
@@ -22,22 +23,30 @@ class RatingData {
     })
   }
 
-  // TODO :Decide to keep this or not
-  getProfStat(html, profUrl) {
-    const dom = Fetcher.htmlToElement(html)
-    let first = dom.querySelector(".pfname").innerText.trim().toUpperCase()
-    let last = dom.querySelector(".plname").innerText.trim().toUpperCase()
+  loadInstrToRating() {
+    let path = "src/data/instrIDToRating.json"
 
-    const name = `${first} ${last}`
-    const ratingBreakdown = dom.querySelectorAll(".rating-breakdown")[0]
-    const grades = ratingBreakdown.querySelectorAll(".grade")
-    return {
-      name: name,
-      over_all: grades[0].innerText.trim(),
-      would_take_again: grades[1].innerText.trim(),
-      difficulty: grades[2].innerText.trim(),
-      url: profUrl
-    }
+    return new Promise((resolve, reject) => {
+      let fullPath = chrome.extension.getURL(path)
+
+      fetch(fullPath)
+        .then(data => {
+          data.json().then(jsonObj => {
+            this.ratingJSON = jsonObj
+            resolve(jsonObj)
+          })
+        })
+        .catch(err => reject(err))
+    })
+  }
+
+  // Return once both files are loaded
+  loadJSON() {
+    return new Promise((resolve, reject) => {
+      Promise.all([this.loadCourseToInstr(), this.loadInstrToRating()])
+        .then(data => resolve(data))
+        .catch(err => reject(err))
+    })
   }
 }
 
