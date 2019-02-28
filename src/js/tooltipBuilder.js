@@ -75,6 +75,13 @@ class TooltipBuilder {
     return p
   }
 
+  getProfLink(name, url) {
+    let a = document.createElement('a')
+    a.innerHTML = name
+    a.href = url
+    return a
+  }
+
   // Tippy.js need to receive the element that exist in DOM
   appendElmToTable(elm) {
     let table = document.getElementsByClassName('section-summary')[0]
@@ -89,7 +96,7 @@ class TooltipBuilder {
     wrapper.setAttribute("class", "ubc-rmp-wrapper");
     let div = document.createElement("div");
     div.setAttribute("id", templateId);
-    div.appendChild(this.getStatsP("Name:", profRating.name))
+    div.appendChild(this.getProfLink(profRating.name, profRating.url))
     div.appendChild(this.getStatsP("Overall:", profRating.over_all))
     div.appendChild(this.getStatsP("Difficulty:", profRating.difficulty))
     div.appendChild(this.getStatsP("Would Take Again:", profRating.would_take_again))
@@ -103,7 +110,7 @@ class TooltipBuilder {
     let div = document.createElement("div");
     div.setAttribute("id", templateId);
     let errorMsg = document.createElement("p")
-    errorMsg.innerText = "Prof Data Not Found"
+    errorMsg.innerText = "Prof Rating Not Found"
     div.appendChild(errorMsg)
     wrapper.appendChild(div)
     this.appendElmToTable(wrapper)
@@ -114,8 +121,14 @@ class TooltipBuilder {
     tippy('.ubc-rmp-link', {
       content: function (reference) {
         return document.getElementById(reference.getAttribute('data-template'))
-      }
+      },
+      interactive: true,
+      placement: "right"
     })
+  }
+
+  haveRating(profRating) {
+    return profRating.difficulty != 0
   }
 
   setTooltips() {
@@ -124,15 +137,16 @@ class TooltipBuilder {
     Object.keys(lectureRows).map(rowNum => {
       let sectionLinkElement = Scraper.rows[rowNum].cells[1].children[0]
       let templateId = `ubc-rmp-template-${rowNum}`
+      let ratingObj = this.getProfStat(lectureRows[rowNum])
 
-      if (Scraper.isLectureRowWithData(rowNum)) {
+      if (Scraper.isLectureRowWithData(rowNum) && this.haveRating(ratingObj)) {
         sectionLinkElement.classList.add('ubc-rmp-link', 'ubc-rmp-true')
         sectionLinkElement.setAttribute("data-template", templateId)
-        let ratingObj = this.getProfStat(lectureRows[rowNum])
         this.appendTrueTemplate(templateId, ratingObj)
       } else {
         sectionLinkElement.classList.add('ubc-rmp-link', 'ubc-rmp-false')
         sectionLinkElement.setAttribute("data-template", templateId)
+        this.appendFalseTemplate(templateId)
       }
     })
 
