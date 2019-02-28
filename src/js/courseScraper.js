@@ -1,5 +1,4 @@
-// TODO: Make class less bloated
-class TableScraper {
+class CourseTableScraper {
   constructor() {
     let tableClass = "table table-striped section-summary"
     this.rows =  document.getElementsByClassName(tableClass)[0].rows
@@ -15,19 +14,10 @@ class TableScraper {
     return this.lectureRows
   }
 
-  // True if found data for given lecture row
-  isLectureRowWithData(rowNum) {
-    return this.lectureRows[rowNum] != null
-  }
-
   getSection(i) {
     // ex. "CPSC 313 101"
     let section = this.rows[i].cells[1].innerText
     return section.split(' ').pop()
-  }
-
-  getLectureRowRating(i) {
-    return this.lectureRows[i]
   }
 
   serializeLectureStats(rowNum) {
@@ -58,4 +48,4 @@ class TableScraper {
   }
 }
 
-export default new TableScraper()
+export default new CourseTableScraper()

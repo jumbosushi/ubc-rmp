@@ -1,4 +1,4 @@
-import Scraper from './tableScraper.js'
+import CourseScraper from './courseScraper.js'
 
 class TooltipBuilder {
 
@@ -132,14 +132,14 @@ class TooltipBuilder {
   }
 
   setTooltips() {
-    let lectureRows = Scraper.getLectureRows()
+    let lectureRows = CourseScraper.getLectureRows()
 
     Object.keys(lectureRows).map(rowNum => {
-      let sectionLinkElement = Scraper.rows[rowNum].cells[1].children[0]
+      let sectionLinkElement = CourseScraper.rows[rowNum].cells[1].children[0]
       let templateId = `ubc-rmp-template-${rowNum}`
       let ratingObj = this.getProfStat(lectureRows[rowNum])
 
-      if (Scraper.isLectureRowWithData(rowNum) && this.haveRating(ratingObj)) {
+      if (this.haveRating(ratingObj)) {
         sectionLinkElement.classList.add('ubc-rmp-link', 'ubc-rmp-true')
         sectionLinkElement.setAttribute("data-template", templateId)
         this.appendTrueTemplate(templateId, ratingObj)

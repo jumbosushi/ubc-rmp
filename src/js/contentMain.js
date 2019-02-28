@@ -1,11 +1,18 @@
-import Scraper from './tableScraper.js'
 import Loader from './loader.js'
 import RatingData from './ratingData.js'
 import TooltipBuilder from './tooltipBuilder.js'
 
-function isSubjectCoursePage() {
+function checkURLParam(param) {
   let urlParams = new URLSearchParams(window.location.href)
-  return urlParams.get('tname') == "subj-course"
+  return urlParams.get('tname') === param
+}
+
+function isSubjectCoursePage() {
+  return checkURLParam("subj-course")
+}
+
+function isSectionPage() {
+  return checkURLParam("subj-section")
 }
 
 // [X] Make it work in section index page
@@ -13,7 +20,7 @@ function isSubjectCoursePage() {
 
 export function main() {
   // Abort if not in subject course page
-  if (!isSubjectCoursePage) { return }
+  if (!isSubjectCoursePage() && !isSectionPage()) { return }
 
   Loader.set()
 
@@ -23,11 +30,10 @@ export function main() {
   // Load JSON from local file
   ratingData.loadJSON()
     .then(data =>  {
-      console.log(ratingData.ratingJSON[622532])
       tooltipBuilder = new TooltipBuilder(ratingData.courseJSON, ratingData.ratingJSON)
       tooltipBuilder.setTooltips()
       Loader.clear()
     })
-    .catch()
+    .catch(err => console.error(err))
 }
 

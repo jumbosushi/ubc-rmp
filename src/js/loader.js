@@ -1,11 +1,11 @@
-import Scraper from './tableScraper.js'
+import CourseScraper from './courseScraper.js'
 
 class Loader {
   constructor() {
-    let lectureRows = Scraper.getLectureRows()
+    let lectureRows = CourseScraper.getLectureRows()
     let lectureRowNumbers = Object.keys(lectureRows)
     let links = lectureRowNumbers.map(i => {
-      return Scraper.rows[i].cells[1].children[0]
+      return CourseScraper.rows[i].cells[1].children[0]
     })
 
     this.lectureLinkElements = links
