@@ -18,14 +18,18 @@
   display: none;
 }
 
+.tippy-tooltip.dark-blue-theme {
+  background: #002144;
+}
+
 div[id^="ubc-rmp-template"] {
-  font-family: "Courier New";
-  color: black;
+  font-family: "Arial", "Sans-Serif";
+  color: white;
   display: inline-block;
   width: auto;
   height: auto;
   padding: 5px 15px 5px 15px;
-  background: #d7e0e7;
+  background: #002144;
 }
 
 div[id^="ubc-rmp-template"] > p {
@@ -34,6 +38,7 @@ div[id^="ubc-rmp-template"] > p {
 }
 
 div[id^="ubc-rmp-template"] > a {
+  color: white;
   text-align: center;
   margin: 0 0 5px;
 }

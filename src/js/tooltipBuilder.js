@@ -129,6 +129,7 @@ class TooltipBuilder {
       placement: "right",
       arrow: true,
       arrowType: "round",
+      theme: "dark-blue",
     })
   }
 
