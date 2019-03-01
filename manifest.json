@@ -12,7 +12,7 @@
       "matches": ["https://courses.students.ubc.ca/cs/*"],
       "css": ["src/css/contentStyle.css"],
       "js": [
-        "src/js/tippy_all.min.js",
+        "src/js/vendor/tippy_all.min.js",
         "src/js/contentScript.js"
       ]
     }
