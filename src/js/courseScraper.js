@@ -1,7 +1,13 @@
+import PageType from './pageType.js'
+
 class CourseTableScraper {
   constructor() {
     let tableClass = "table table-striped section-summary"
-    this.rows =  document.getElementsByClassName(tableClass)[0].rows
+    if (PageType.isSubjectCoursePage()) {
+      this.rows =  document.getElementsByClassName(tableClass)[0].rows
+    } else {
+      this.rows = []
+    }
     this.lectureRows = {}
   }
 

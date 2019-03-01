@@ -1,26 +1,15 @@
 import Loader from './loader.js'
 import RatingData from './ratingData.js'
 import TooltipBuilder from './tooltipBuilder.js'
+import PageType from './pageType.js'
 
-function checkURLParam(param) {
-  let urlParams = new URLSearchParams(window.location.href)
-  return urlParams.get('tname') === param
-}
-
-function isSubjectCoursePage() {
-  return checkURLParam("subj-course")
-}
-
-function isSectionPage() {
-  return checkURLParam("subj-section")
-}
 
 // [X] Make it work in section index page
 // [ ] Make it work in individual section page
 
 export function main() {
   // Abort if not in subject course page
-  if (!isSubjectCoursePage() && !isSectionPage()) { return }
+  if (!PageType.isAllowedPage()) { return }
 
   Loader.set()
 
@@ -31,7 +20,11 @@ export function main() {
   ratingData.loadJSON()
     .then(data =>  {
       tooltipBuilder = new TooltipBuilder(ratingData.courseJSON, ratingData.ratingJSON)
-      tooltipBuilder.setTooltips()
+      if (PageType.isSubjectCoursePage()) {
+        tooltipBuilder.setTooltips()
+      } else {
+        tooltipBuilder.setSectionTooltips()
+      }
       Loader.clear()
     })
     .catch(err => console.error(err))

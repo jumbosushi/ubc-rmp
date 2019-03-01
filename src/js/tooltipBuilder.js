@@ -1,4 +1,6 @@
 import CourseScraper from './courseScraper.js'
+import SectionScraper from './sectionScraper.js'
+import PageType from './pageType.js'
 
 class TooltipBuilder {
 
@@ -84,8 +86,8 @@ class TooltipBuilder {
 
   // Tippy.js need to receive the element that exist in DOM
   appendElmToTable(elm) {
-    let table = document.getElementsByClassName('section-summary')[0]
-    table.appendChild(elm)
+    // let table = document.getElementsByClassName('section-summary')[0]
+    document.body.appendChild(elm)
   }
 
   // Wrapper div that is 'display: none' is required here since
@@ -122,8 +124,11 @@ class TooltipBuilder {
       content: function (reference) {
         return document.getElementById(reference.getAttribute('data-template'))
       },
+      // Keep tooltip if hovered
       interactive: true,
-      placement: "right"
+      placement: "right",
+      arrow: true,
+      arrowType: "round",
     })
   }
 
@@ -131,25 +136,39 @@ class TooltipBuilder {
     return profRating.difficulty != 0
   }
 
+  addTooltip(element, templateID, profRating) {
+      if (this.haveRating(profRating)) {
+        element.classList.add('ubc-rmp-link', 'ubc-rmp-true')
+        element.setAttribute("data-template", templateID)
+        this.appendTrueTemplate(templateID, profRating)
+      } else {
+        element.classList.add('ubc-rmp-link', 'ubc-rmp-false')
+        element.setAttribute("data-template", templateID)
+        this.appendFalseTemplate(templateID)
+      }
+  }
+
   setTooltips() {
     let lectureRows = CourseScraper.getLectureRows()
 
     Object.keys(lectureRows).map(rowNum => {
       let sectionLinkElement = CourseScraper.rows[rowNum].cells[1].children[0]
-      let templateId = `ubc-rmp-template-${rowNum}`
-      let ratingObj = this.getProfStat(lectureRows[rowNum])
+      let templateID = `ubc-rmp-template-${rowNum}`
+      let profRating = this.getProfStat(lectureRows[rowNum])
 
-      if (this.haveRating(ratingObj)) {
-        sectionLinkElement.classList.add('ubc-rmp-link', 'ubc-rmp-true')
-        sectionLinkElement.setAttribute("data-template", templateId)
-        this.appendTrueTemplate(templateId, ratingObj)
-      } else {
-        sectionLinkElement.classList.add('ubc-rmp-link', 'ubc-rmp-false')
-        sectionLinkElement.setAttribute("data-template", templateId)
-        this.appendFalseTemplate(templateId)
-      }
+      this.addTooltip(sectionLinkElement, templateID, profRating)
     })
 
+    this.tippyAppendTemplate()
+  }
+
+  setSectionTooltips() {
+    let instrLinkElement = SectionScraper.getInstrLinkElement()
+    let templateID = `ubc-rmp-template-1`
+    let section = SectionScraper.section
+    let profRating = this.getProfStat(section)
+
+    this.addTooltip(instrLinkElement, templateID, profRating)
     this.tippyAppendTemplate()
   }
 }
