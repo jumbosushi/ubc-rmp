@@ -1,8 +1,8 @@
 # UBC-RMP :books:
 
-![rmp_demo](https://user-images.githubusercontent.com/9669739/50617380-c3dbdb80-0ea1-11e9-9f8f-8ec104fabc52.gif)
+![rmpdone](https://user-images.githubusercontent.com/9669739/53610780-f98b0100-3b80-11e9-8939-d12de70710b9.gif)
 
-Browser extension for UBC course registration to let students access Rate My Prof info easier. Caches the response per course.
+Browser extension for UBC course registration to let students access Rate My Prof info easier.
 
 ## Usage
 
