@@ -26,14 +26,6 @@ class CourseTableScraper {
     return section.split(' ').pop()
   }
 
-  serializeLectureStats(rowNum) {
-  let stat = this.lectureRows[rowNum]
-  return `Name: ${stat.name}\n\
-          Overall: ${stat.over_all}\n\
-          Difficulty: ${stat.difficulty}\n\
-          Would Take Again: ${stat.would_take_again}`
-  }
-
   isLecture(i) {
     let section = this.rows[i].cells[1].innerText
     let activity = this.rows[i].cells[2].innerText
