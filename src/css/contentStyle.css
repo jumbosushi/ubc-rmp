@@ -20,11 +20,20 @@
 
 div[id^="ubc-rmp-template"] {
   font-family: "Courier New";
-  text-align: left;
   color: black;
   display: inline-block;
   width: auto;
   height: auto;
   padding: 5px 15px 5px 15px;
   background: #d7e0e7;
+}
+
+div[id^="ubc-rmp-template"] > p {
+  text-align: left;
+  margin: 5px 0 0;
+}
+
+div[id^="ubc-rmp-template"] > a {
+  text-align: center;
+  margin: 0 0 5px;
 }
