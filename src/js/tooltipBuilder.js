@@ -112,7 +112,7 @@ class TooltipBuilder {
     let div = document.createElement("div");
     div.setAttribute("id", templateId);
     let errorMsg = document.createElement("p")
-    errorMsg.innerText = "Prof Rating Not Found"
+    errorMsg.innerText = "Couldn't find the data :("
     div.appendChild(errorMsg)
     wrapper.appendChild(div)
     this.appendElmToTable(wrapper)
