@@ -21,7 +21,7 @@ export function main() {
     .then(data =>  {
       tooltipBuilder = new TooltipBuilder(ratingData.courseJSON, ratingData.ratingJSON)
       if (PageType.isSubjectCoursePage()) {
-        tooltipBuilder.setTooltips()
+        tooltipBuilder.setCourseTooltips()
       } else {
         tooltipBuilder.setSectionTooltips()
       }

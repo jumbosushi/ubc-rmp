@@ -1,6 +1,7 @@
 import CourseScraper from './courseScraper.js'
 import SectionScraper from './sectionScraper.js'
 import PageType from './pageType.js'
+import DocElement from './docElement.js'
 
 class TooltipBuilder {
 
@@ -65,23 +66,11 @@ class TooltipBuilder {
       over_all:          rating.overall,
       would_take_again:  would_take_again_str,
       difficulty:        rating.difficulty,
+      rmpid:             rating.rmpid,
       url:               this.getRMPProfileLink(rating.rmpid)
     }
 
     return result
-  }
-
-  getStatsP(text, stats) {
-    let p = document.createElement('p')
-    p.innerHTML = text + ` <b>${stats}</b>`
-    return p
-  }
-
-  getProfLink(name, url) {
-    let a = document.createElement('a')
-    a.innerHTML = name
-    a.href = url
-    return a
   }
 
   // Tippy.js need to receive the element that exist in DOM
@@ -94,26 +83,38 @@ class TooltipBuilder {
   // Tippy.js need to receive the element that exist in DOM
   // Without wrapper, it would break the page layout
   appendTrueTemplate(templateId, profRating) {
-    let wrapper = document.createElement("div");
-    wrapper.setAttribute("class", "ubc-rmp-wrapper");
+    let wrapper = DocElement.getWrapperDiv()
     let div = document.createElement("div");
     div.setAttribute("id", templateId);
-    div.appendChild(this.getProfLink(profRating.name, profRating.url))
-    div.appendChild(this.getStatsP("Overall:", profRating.over_all))
-    div.appendChild(this.getStatsP("Difficulty:", profRating.difficulty))
-    div.appendChild(this.getStatsP("Would Take Again:", profRating.would_take_again))
+    div.appendChild(DocElement.getLinkElem(profRating.name, profRating.url))
+    div.appendChild(DocElement.getStatsPElem("Overall:", profRating.over_all))
+    div.appendChild(DocElement.getStatsPElem("Difficulty:", profRating.difficulty))
+    div.appendChild(DocElement.getStatsPElem("Would Take Again:", profRating.would_take_again))
     wrapper.appendChild(div)
     this.appendElmToTable(wrapper)
   }
 
-  appendFalseTemplate(templateId) {
-    let wrapper = document.createElement("div");
-    wrapper.setAttribute("class", "ubc-rmp-wrapper");
+  appendNoReviewTemplate(templateId, profRating) {
+    let wrapper = DocElement.getWrapperDiv()
     let div = document.createElement("div");
     div.setAttribute("id", templateId);
-    let errorMsg = document.createElement("p")
-    errorMsg.innerText = "Couldn't find the data :("
+    let errorMsg = DocElement.getPElem("This prof doesn't have any review :(")
+    let callToAction = DocElement.getLinkElem("Add a review", profRating.url)
     div.appendChild(errorMsg)
+    div.appendChild(callToAction)
+    wrapper.appendChild(div)
+    this.appendElmToTable(wrapper)
+  }
+
+  appendNoProfileTemplate(templateId) {
+    let wrapper = DocElement.getWrapperDiv()
+    let div = document.createElement("div");
+    div.setAttribute("id", templateId);
+    let errorMsg = DocElement.getPElem("This prof doesn't have a profile :(")
+    let newProfileLink = "https://www.ratemyprofessors.com/teacher/create"
+    let callToAction = DocElement.getLinkElem("Add a new prof profile", newProfileLink)
+    div.appendChild(errorMsg)
+    div.appendChild(callToAction)
     wrapper.appendChild(div)
     this.appendElmToTable(wrapper)
   }
@@ -137,6 +138,11 @@ class TooltipBuilder {
     return profRating.difficulty != 0
   }
 
+  haveRMPProfile(profRating) {
+    console.log(profRating)
+    return profRating.rmpid != 0
+  }
+
   addTooltip(element, templateID, profRating) {
       if (this.haveRating(profRating)) {
         element.classList.add('ubc-rmp-link', 'ubc-rmp-true')
@@ -145,11 +151,15 @@ class TooltipBuilder {
       } else {
         element.classList.add('ubc-rmp-link', 'ubc-rmp-false')
         element.setAttribute("data-template", templateID)
-        this.appendFalseTemplate(templateID)
+        if (this.haveRMPProfile(profRating)) {
+          this.appendNoReviewTemplate(templateID, profRating)
+        } else {
+          this.appendNoProfileTemplate(templateID)
+        }
       }
   }
 
-  setTooltips() {
+  setCourseTooltips() {
     let lectureRows = CourseScraper.getLectureRows()
 
     Object.keys(lectureRows).map(rowNum => {
