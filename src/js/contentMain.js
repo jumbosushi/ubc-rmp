@@ -3,12 +3,7 @@ import RatingData from './ratingData.js'
 import TooltipBuilder from './tooltipBuilder.js'
 import PageType from './pageType.js'
 
-
-// [X] Make it work in section index page
-// [ ] Make it work in individual section page
-
 export function main() {
-  // Abort if not in subject course page
   if (!PageType.isAllowedPage()) { return }
 
   Loader.set()

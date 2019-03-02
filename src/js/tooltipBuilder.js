@@ -28,16 +28,16 @@ class TooltipBuilder {
     this.instrToRating = ratingJSON
   }
 
-  getInstrID(section) {
+  getInstrIDs(section) {
     let urlParams = new URLSearchParams(window.location.href)
     let dept = urlParams.get('dept')
     let course = urlParams.get('course')
     return this.courseToInstr[dept][course][section]
   }
 
-  getRating(section) {
-    let instrID = this.getInstrID(section)
-    return this.instrToRating[instrID]
+  getRatings(section) {
+    let instrIDs = this.getInstrIDs(section)
+    return instrIDs.map(ubcid => this.instrToRating[ubcid])
   }
 
   getRMPProfileLink(profID) {
@@ -46,31 +46,36 @@ class TooltipBuilder {
   }
 
   getProfStat(section) {
-    let rating = this.getRating(section)
+    let ratings = this.getRatings(section)
+    let formattedRatings = []
 
-    let would_take_again_str
-    // Switch used here to handle either when str is empty or "N/A"
-    switch (rating.would_take_again) {
-      case "":
-        would_take_again_str = "Unknown"
-        break
-      case "N/A":
-        would_take_again_str = "N/A"
-        break
-      default:
-        would_take_again_str = rating.would_take_again
-    }
+    ratings.forEach(rating => {
+      let would_take_again_str
+      // Switch used here to handle either when str is empty or "N/A"
+      switch (rating.would_take_again) {
+        case "":
+          would_take_again_str = "Unknown"
+          break
+        case "N/A":
+          would_take_again_str = "N/A"
+          break
+        default:
+          would_take_again_str = rating.would_take_again
+      }
 
-    let result = {
-      name:              rating.name,
-      over_all:          rating.overall,
-      would_take_again:  would_take_again_str,
-      difficulty:        rating.difficulty,
-      rmpid:             rating.rmpid,
-      url:               this.getRMPProfileLink(rating.rmpid)
-    }
+      let result = {
+        name:              rating.name,
+        over_all:          rating.overall,
+        would_take_again:  would_take_again_str,
+        difficulty:        rating.difficulty,
+        rmpid:             rating.rmpid,
+        url:               this.getRMPProfileLink(rating.rmpid)
+      }
 
-    return result
+      formattedRatings.push(result)
+    })
+
+    return formattedRatings
   }
 
   // Tippy.js need to receive the element that exist in DOM
@@ -174,12 +179,16 @@ class TooltipBuilder {
   }
 
   setSectionTooltips() {
-    let instrLinkElement = SectionScraper.getInstrLinkElement()
-    let templateID = `ubc-rmp-template-1`
+    let id = 1
+    let instrLinkElements = SectionScraper.getInstrLinkElement()
     let section = SectionScraper.section
-    let profRating = this.getProfStat(section)
+    let profRatings = this.getProfStat(section)
 
-    this.addTooltip(instrLinkElement, templateID, profRating)
+    profRatings.forEach((profRating, i) => {
+      let templateID = `ubc-rmp-template-${id}`
+      this.addTooltip(instrLinkElements[i], templateID, profRating)
+      id++
+    })
     this.tippyAppendTemplate()
   }
 }

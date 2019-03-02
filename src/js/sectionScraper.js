@@ -4,7 +4,7 @@ class SectionScraper {
   constructor() {
     if (!PageType.isSectionPage()) {
       // Not in section page
-      this.instrLinkElement = null
+      this.instrLinkElements = null
     } else {
       // No specific ID on that table so gotta refer it by row order :/
       // When user is logged in
@@ -18,7 +18,7 @@ class SectionScraper {
         profColumn = instrTable.getElementsByTagName('a')
       }
 
-      this.instrLinkElement = profColumn[0]
+      this.instrLinkElements = profColumn
     }
 
 
@@ -27,7 +27,7 @@ class SectionScraper {
   }
 
   getInstrLinkElement() {
-    return this.instrLinkElement
+    return this.instrLinkElements
   }
 }
 
