@@ -37,6 +37,10 @@ class TooltipBuilder {
 
   getRatings(section) {
     let instrIDs = this.getInstrIDs(section)
+
+    if (instrIDs == undefined) {
+      return []
+    }
     return instrIDs.map(ubcid => this.instrToRating[ubcid])
   }
 
@@ -144,7 +148,6 @@ class TooltipBuilder {
   }
 
   haveRMPProfile(profRating) {
-    console.log(profRating)
     return profRating.rmpid != 0
   }
 
@@ -164,15 +167,39 @@ class TooltipBuilder {
       }
   }
 
+  getBestRating(profRatings) {
+    // Index for which rating to show in course index page
+    let ratingIndex = 0
+    let bestRating = profRatings[ratingIndex]
+
+    for (let i = 1; i < profRatings.length; i++) {
+      let curRating = profRatings[i]
+      if (curRating.over_all > bestRating.over_all) {
+        ratingIndex = i
+      }
+    }
+
+    return profRatings[ratingIndex]
+  }
+
   setCourseTooltips() {
     let lectureRows = CourseScraper.getLectureRows()
 
     Object.keys(lectureRows).map(rowNum => {
       let sectionLinkElement = CourseScraper.rows[rowNum].cells[1].children[0]
       let templateID = `ubc-rmp-template-${rowNum}`
-      let profRating = this.getProfStat(lectureRows[rowNum])
+      let profRatings = this.getProfStat(lectureRows[rowNum])
 
-      this.addTooltip(sectionLinkElement, templateID, profRating)
+      // In current scrpaer implementation, profRatings == []
+      // when type is "Lectures" but taught only by TA's
+      if (profRatings.length === 0) {
+        return
+      }
+
+      // Choose the best out of the lecture instructors
+      let bestRating = this.getBestRating(profRatings)
+
+      this.addTooltip(sectionLinkElement, templateID, bestRating)
     })
 
     this.tippyAppendTemplate()
