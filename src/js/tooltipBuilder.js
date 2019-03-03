@@ -91,7 +91,7 @@ class TooltipBuilder {
   // Wrapper div that is 'display: none' is required here since
   // Tippy.js need to receive the element that exist in DOM
   // Without wrapper, it would break the page layout
-  appendTrueTemplate(templateId, profRating, extraProfCount) {
+  appendSuccessTemplate(templateId, profRating, extraProfCount) {
     let wrapper = DocElement.getWrapperDiv()
     let div = document.createElement("div");
     div.setAttribute("id", templateId);
@@ -110,11 +110,21 @@ class TooltipBuilder {
     this.appendElmToTable(wrapper)
   }
 
-  appendNoReviewTemplate(templateId, profRating) {
+  appendNoneSectionTemplate(templateID) {
     let wrapper = DocElement.getWrapperDiv()
     let div = document.createElement("div");
-    div.setAttribute("id", templateId);
-    let errorMsg = DocElement.getPElem("This prof doesn't have any review :(")
+    div.setAttribute("id", templateID);
+    let errorMsg = DocElement.getPElem("No prof with ratings in this section :(")
+    div.appendChild(errorMsg)
+    wrapper.appendChild(div)
+    this.appendElmToTable(wrapper)
+  }
+
+  appendNoReviewTemplate(templateID, profRating) {
+    let wrapper = DocElement.getWrapperDiv()
+    let div = document.createElement("div");
+    div.setAttribute("id", templateID);
+    let errorMsg = DocElement.getPElem("This prof doesn't have any reviews :(")
     let callToAction = DocElement.getLinkElem("Add a review", profRating.url)
     div.appendChild(errorMsg)
     div.appendChild(callToAction)
@@ -122,10 +132,10 @@ class TooltipBuilder {
     this.appendElmToTable(wrapper)
   }
 
-  appendNoProfileTemplate(templateId) {
+  appendNoProfileTemplate(templateID) {
     let wrapper = DocElement.getWrapperDiv()
     let div = document.createElement("div");
-    div.setAttribute("id", templateId);
+    div.setAttribute("id", templateID);
     let errorMsg = DocElement.getPElem("This prof doesn't have a profile :(")
     let newProfileLink = "https://www.ratemyprofessors.com/teacher/create"
     let callToAction = DocElement.getLinkElem("Add a new prof profile", newProfileLink)
@@ -158,18 +168,22 @@ class TooltipBuilder {
     return profRating.rmpid != 0
   }
 
-  addTooltip(element, templateID, profRating, profNames) {
+  addTooltip(element, templateID, profRating, profNames, isCourse) {
       if (this.haveRating(profRating)) {
         element.classList.add('ubc-rmp-link', 'ubc-rmp-true')
         element.setAttribute("data-template", templateID)
-        this.appendTrueTemplate(templateID, profRating, profNames)
+        this.appendSuccessTemplate(templateID, profRating, profNames)
       } else {
         element.classList.add('ubc-rmp-link', 'ubc-rmp-false')
         element.setAttribute("data-template", templateID)
-        if (this.haveRMPProfile(profRating)) {
-          this.appendNoReviewTemplate(templateID, profRating)
+        if (isCourse) {
+          this.appendNoneSectionTemplate(templateID)
         } else {
-          this.appendNoProfileTemplate(templateID)
+          if (this.haveRMPProfile(profRating)) {
+            this.appendNoReviewTemplate(templateID, profRating)
+          } else {
+            this.appendNoProfileTemplate(templateID)
+          }
         }
       }
   }
@@ -207,7 +221,7 @@ class TooltipBuilder {
       let bestRating = this.getBestRating(profRatings)
       let extraProfCount = profRatings.length - 1
 
-      this.addTooltip(sectionLinkElement, templateID, bestRating, extraProfCount)
+      this.addTooltip(sectionLinkElement, templateID, bestRating, extraProfCount, true)
     })
 
     this.tippyAppendTemplate()
@@ -221,7 +235,7 @@ class TooltipBuilder {
 
     profRatings.forEach((profRating, i) => {
       let templateID = `ubc-rmp-template-${id}`
-      this.addTooltip(instrLinkElements[i], templateID, profRating, 0)
+      this.addTooltip(instrLinkElements[i], templateID, profRating, 0, false)
       id++
     })
     this.tippyAppendTemplate()
