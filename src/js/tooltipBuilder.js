@@ -91,7 +91,7 @@ class TooltipBuilder {
   // Wrapper div that is 'display: none' is required here since
   // Tippy.js need to receive the element that exist in DOM
   // Without wrapper, it would break the page layout
-  appendTrueTemplate(templateId, profRating) {
+  appendTrueTemplate(templateId, profRating, extraProfCount) {
     let wrapper = DocElement.getWrapperDiv()
     let div = document.createElement("div");
     div.setAttribute("id", templateId);
@@ -99,6 +99,13 @@ class TooltipBuilder {
     div.appendChild(DocElement.getStatsPElem("Overall:", profRating.over_all))
     div.appendChild(DocElement.getStatsPElem("Difficulty:", profRating.difficulty))
     div.appendChild(DocElement.getStatsPElem("Would Take Again:", profRating.would_take_again))
+    // Add the message at the bottom for courses index
+    if (extraProfCount > 0) {
+      let profNoun = (extraProfCount == 1) ? 'prof' : 'profs'
+      let extraProfMsg = DocElement.getPElem(`+ ${extraProfCount} other ${profNoun}`)
+      extraProfMsg.classList.add('extra-prof-msg')
+      div.appendChild(extraProfMsg)
+    }
     wrapper.appendChild(div)
     this.appendElmToTable(wrapper)
   }
@@ -151,11 +158,11 @@ class TooltipBuilder {
     return profRating.rmpid != 0
   }
 
-  addTooltip(element, templateID, profRating) {
+  addTooltip(element, templateID, profRating, profNames) {
       if (this.haveRating(profRating)) {
         element.classList.add('ubc-rmp-link', 'ubc-rmp-true')
         element.setAttribute("data-template", templateID)
-        this.appendTrueTemplate(templateID, profRating)
+        this.appendTrueTemplate(templateID, profRating, profNames)
       } else {
         element.classList.add('ubc-rmp-link', 'ubc-rmp-false')
         element.setAttribute("data-template", templateID)
@@ -198,8 +205,9 @@ class TooltipBuilder {
 
       // Choose the best out of the lecture instructors
       let bestRating = this.getBestRating(profRatings)
+      let extraProfCount = profRatings.length - 1
 
-      this.addTooltip(sectionLinkElement, templateID, bestRating)
+      this.addTooltip(sectionLinkElement, templateID, bestRating, extraProfCount)
     })
 
     this.tippyAppendTemplate()
@@ -213,7 +221,7 @@ class TooltipBuilder {
 
     profRatings.forEach((profRating, i) => {
       let templateID = `ubc-rmp-template-${id}`
-      this.addTooltip(instrLinkElements[i], templateID, profRating)
+      this.addTooltip(instrLinkElements[i], templateID, profRating, 0)
       id++
     })
     this.tippyAppendTemplate()

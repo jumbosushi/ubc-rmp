@@ -38,7 +38,13 @@ div[id^="ubc-rmp-template"] > p {
 }
 
 div[id^="ubc-rmp-template"] > a {
-  color: white;
   text-align: center;
+  color: white;
   margin: 0 0 5px;
 }
+
+.extra-prof-msg {
+  text-align: center !important;
+  font-size: 0.8em;
+}
+
