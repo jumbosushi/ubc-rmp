@@ -1,5 +1,5 @@
 .ubc-rmp-true {
-  color: #31bd5e !important;
+  color: #00a010 !important;
 }
 
 .ubc-rmp-false {
@@ -47,4 +47,3 @@ div[id^="ubc-rmp-template"] > a {
   text-align: center !important;
   font-size: 0.8em;
 }
-
