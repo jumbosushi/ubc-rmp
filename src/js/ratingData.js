@@ -1,7 +1,5 @@
 class RatingData {
   constructor() {
-    // TODO: Make this load from /data once webpack is configured
-    // Takes roughly 1.2 ms to load this
     this.courseJSON = {}
     this.ratingJSON = {}
   }

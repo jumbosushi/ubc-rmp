@@ -9,7 +9,6 @@ class SectionScraper {
       // No specific ID on that table so gotta refer it by row order :/
       // When user is logged in
       let instrTable = document.getElementsByClassName('table')[3]
-      // TODO: Support > 1 prof
       let profColumn = instrTable.getElementsByTagName('a')
 
       if (profColumn.length == 0) {

@@ -29,16 +29,12 @@ class CourseTableScraper {
   isLecture(i) {
     let section = this.rows[i].cells[1].innerText
     let activity = this.rows[i].cells[2].innerText
-    // TODO: Include distance education
     return activity.includes("Lecture") && section != ""
   }
 
   setLectureRows() {
     for (var i = 1; i < this.rows.length; i++) {
       if (this.isLecture(i)) {
-        // TODO: Save Section Number
-        // Temp save url and i
-        // This is because Promise won't let i be saved in its instance
         let section = this.getSection(i)
         this.lectureRows[i] = section
       }
