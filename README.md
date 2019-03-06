@@ -9,7 +9,7 @@ Browser extension for UBC course registration page to let students access Rate M
 
 <a href="https://chrome.google.com/webstore/detail/ubc-rmp/iggomdckinfebdknahdgknkkjcjcfcld/"><img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_128x128.png" width="48" /></a>
 
-Install it from [Chrome Web Store](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_128x128.png)
+Install it from [Chrome Web Store](https://chrome.google.com/webstore/detail/ubc-rmp/iggomdckinfebdknahdgknkkjcjcfcld/)
 
 ## Features
 
