@@ -55,23 +55,23 @@ class TooltipBuilder {
   getProfStat(section) {
     let ratings = this.getRatings(section)
     let formattedRatings = ratings.map(rating => {
-      let would_take_again_str
+      let wouldTakeAgainStr
       // Switch used here to handle either when str is empty or "N/A"
       switch (rating.would_take_again) {
         case "":
-          would_take_again_str = "Unknown"
+          wouldTakeAgainStr = "Unknown"
           break
         case "N/A":
-          would_take_again_str = "N/A"
+          wouldTakeAgainStr = "N/A"
           break
         default:
-          would_take_again_str = rating.would_take_again
+          wouldTakeAgainStr = rating.would_take_again
       }
 
       let result = {
         name:              rating.name,
         over_all:          rating.overall,
-        would_take_again:  would_take_again_str,
+        would_take_again:  wouldTakeAgainStr,
         difficulty:        rating.difficulty,
         rmpid:             rating.rmpid,
         url:               this.getRMPProfileLink(rating.rmpid)
