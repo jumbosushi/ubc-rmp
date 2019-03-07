@@ -54,9 +54,7 @@ class TooltipBuilder {
 
   getProfStat(section) {
     let ratings = this.getRatings(section)
-    let formattedRatings = []
-
-    ratings.forEach(rating => {
+    let formattedRatings = ratings.map(rating => {
       let would_take_again_str
       // Switch used here to handle either when str is empty or "N/A"
       switch (rating.would_take_again) {
@@ -78,8 +76,6 @@ class TooltipBuilder {
         rmpid:             rating.rmpid,
         url:               this.getRMPProfileLink(rating.rmpid)
       }
-
-      formattedRatings.push(result)
     })
 
     return formattedRatings
