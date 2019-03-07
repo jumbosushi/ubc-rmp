@@ -95,8 +95,8 @@ class TooltipBuilder {
     let div = document.createElement("div");
     div.setAttribute("id", templateId);
     div.appendChild(DocElement.getLinkElem(profRating.name, profRating.url))
-    div.appendChild(DocElement.getStatsPElem("Overall:", profRating.over_all))
-    div.appendChild(DocElement.getStatsPElem("Difficulty:", profRating.difficulty))
+    div.appendChild(DocElement.getStatsPElem("Overall:    ", profRating.over_all))
+    div.appendChild(DocElement.getStatsPElem("Difficulty: ", profRating.difficulty))
     div.appendChild(DocElement.getStatsPElem("Would Take Again:", profRating.would_take_again))
     // Add the message at the bottom for courses index
     if (extraProfCount > 0) {
