@@ -76,6 +76,7 @@ class TooltipBuilder {
         rmpid:             rating.rmpid,
         url:               this.getRMPProfileLink(rating.rmpid)
       }
+      return result
     })
 
     return formattedRatings
