@@ -29,7 +29,16 @@ class CourseTableScraper {
   isLecture(i) {
     let section = this.rows[i].cells[1].innerText
     let activity = this.rows[i].cells[2].innerText
-    return activity.includes("Lecture") && section != ""
+    let validActivityType = [
+    		"Lecture",
+        "Lecture-Seminar",
+        "Lecture-Laboratory",
+        "Distance Education",
+        "Laboratory",
+        "Practicum",
+        "Seminar",
+    ]
+    return validActivityType.includes(activity) && section != ""
   }
 
   setLectureRows() {
