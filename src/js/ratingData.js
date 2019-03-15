@@ -1,11 +1,15 @@
+import PageType from './pageType.js'
+
 class RatingData {
   constructor() {
+    this.filePrefix = PageType.getJSONPrefix()
     this.courseJSON = {}
     this.ratingJSON = {}
   }
 
   loadCourseToInstr() {
-    let path = "src/data/courseToInstrID.json"
+    let path = `src/data/${this.filePrefix}courseToinstrID.json`
+    console.log(path)
 
     return new Promise((resolve, reject) => {
       let fullPath = chrome.extension.getURL(path)
@@ -22,7 +26,7 @@ class RatingData {
   }
 
   loadInstrToRating() {
-    let path = "src/data/instrIDToRating.json"
+    let path = `src/data/${this.filePrefix}instrIDToRating.json`
 
     return new Promise((resolve, reject) => {
       let fullPath = chrome.extension.getURL(path)
