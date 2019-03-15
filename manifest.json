@@ -2,7 +2,7 @@
   "name": "UBC-RMP",
   "version": "1.0.2",
   "description": "Shows UBC professor's Rate My Prof ratings on SSC",
-  "permissions": ["activeTab", "declarativeContent"],
+  "permissions": ["activeTab"],
   "content_scripts": [
     {
       "matches": ["https://courses.students.ubc.ca/cs/*"],
