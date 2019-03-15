@@ -8,7 +8,7 @@ class RatingData {
   }
 
   loadCourseToInstr() {
-    let path = `src/data/${this.filePrefix}courseToinstrID.json`
+    let path = `src/data/${this.filePrefix}courseToInstrID.json`
     console.log(path)
 
     return new Promise((resolve, reject) => {
