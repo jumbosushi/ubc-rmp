@@ -1,6 +1,6 @@
 class PageType {
   constructor() {
-    this.urlParams = new URLSearchParams(window.location.href)
+    this.urlParams = new URLSearchParams(window.location.search)
   }
 
   checkURLParam(param) {
