@@ -1,8 +1,14 @@
-# UBC-RMP :books:
+# UBC-RMP 
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/9669739/54533519-9b636980-4947-11e9-8fc1-01f19acd4a86.png"/>
+</p>
+
+Browser extension for UBC course registration page to let students access Rate My Prof info easier!
+
+## Demo
 
 ![demo](https://user-images.githubusercontent.com/9669739/53616245-9015ed00-3b96-11e9-9b24-da52e92737c2.gif)
-
-Browser extension for UBC course registration page to let students access Rate My Prof info easier.
 
 ## Install
 
