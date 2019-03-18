@@ -2,7 +2,11 @@
   color: #00a010 !important;
 }
 
-.ubc-rmp-false {
+.ubc-rmp-false-section {
+  /* Do nothing */
+}
+
+.ubc-rmp-false-prof {
   color: #bb0000 !important;
 }
 

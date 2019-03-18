@@ -110,11 +110,21 @@ class TooltipBuilder {
     this.appendElmToTable(wrapper)
   }
 
-  appendNoneSectionTemplate(templateID) {
+  appendNoRatingSectionTemplate(templateID) {
     let wrapper = DocElement.getWrapperDiv()
     let div = document.createElement("div");
     div.setAttribute("id", templateID);
     let errorMsg = DocElement.getPElem("No prof with ratings in this section :(")
+    div.appendChild(errorMsg)
+    wrapper.appendChild(div)
+    this.appendElmToTable(wrapper)
+  }
+
+  appendNoProfSectionTemplate(templateID) {
+    let wrapper = DocElement.getWrapperDiv()
+    let div = document.createElement("div");
+    div.setAttribute("id", templateID);
+    let errorMsg = DocElement.getPElem("No prof assigned for this section :(")
     div.appendChild(errorMsg)
     wrapper.appendChild(div)
     this.appendElmToTable(wrapper)
@@ -161,7 +171,12 @@ class TooltipBuilder {
   }
 
   haveRating(profRating) {
+    if (profRating === null) { return false }
     return profRating.difficulty != 0
+  }
+
+  isProfAssigned(profRating) {
+    return profRating !== null
   }
 
   haveRMPProfile(profRating) {
@@ -169,16 +184,21 @@ class TooltipBuilder {
   }
 
   addTooltip(element, templateID, profRating, profNames, isCourse) {
+      element.setAttribute("data-template", templateID)
+
       if (this.haveRating(profRating)) {
         element.classList.add('ubc-rmp-link', 'ubc-rmp-true')
-        element.setAttribute("data-template", templateID)
         this.appendSuccessTemplate(templateID, profRating, profNames)
       } else {
-        element.classList.add('ubc-rmp-link', 'ubc-rmp-false')
-        element.setAttribute("data-template", templateID)
         if (isCourse) {
-          this.appendNoneSectionTemplate(templateID)
+          element.classList.add('ubc-rmp-link', 'ubc-rmp-false-section')
+          if (this.isProfAssigned(profRating)) {
+            this.appendNoRatingSectionTemplate(templateID)
+          } else {
+            this.appendNoProfSectionTemplate(templateID)
+          }
         } else {
+          element.classList.add('ubc-rmp-link', 'ubc-rmp-false-prof')
           if (this.haveRMPProfile(profRating)) {
             this.appendNoReviewTemplate(templateID, profRating)
           } else {
@@ -210,15 +230,17 @@ class TooltipBuilder {
       let sectionLinkElement = CourseScraper.rows[rowNum].cells[1].children[0]
       let templateID = `ubc-rmp-template-${rowNum}`
       let profRatings = this.getProfStat(lectureRows[rowNum])
+      let bestRating
 
       // In current scrpaer implementation, profRatings == []
       // when type is "Lectures" but taught only by TA's
       if (profRatings.length === 0) {
-        return
+        bestRating = null
+      } else {
+        // Choose the best out of the lecture instructors
+        bestRating = this.getBestRating(profRatings)
       }
 
-      // Choose the best out of the lecture instructors
-      let bestRating = this.getBestRating(profRatings)
       let extraProfCount = profRatings.length - 1
 
       this.addTooltip(sectionLinkElement, templateID, bestRating, extraProfCount, true)

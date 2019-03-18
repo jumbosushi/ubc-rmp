@@ -1,10 +1,10 @@
-# UBC-RMP 
+# UBC-RMP
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/9669739/54533519-9b636980-4947-11e9-8fc1-01f19acd4a86.png"/>
 </p>
 
-Browser extension for UBC course registration page to let students access Rate My Prof info easier!
+Browser extension for UBC course registration page to let students access Rate My Prof info easier
 
 ## Demo
 
