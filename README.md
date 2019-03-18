@@ -7,6 +7,8 @@
 
 Browser extension for UBC course registration page to let students access Rate My Prof info easier
 
+Note: **Please be aware that ratings tend to be [flawed and biased](https://link.springer.com/article/10.1007/s10755-014-9313-4).** It is encouraged to keep that in mind and take info presented as part of your decision making process rather than using it as the only metric to decide which course to take.
+
 ## Demo
 
 ![demo](https://user-images.githubusercontent.com/9669739/53616245-9015ed00-3b96-11e9-9b24-da52e92737c2.gif)
