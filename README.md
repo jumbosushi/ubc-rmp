@@ -24,7 +24,7 @@ Install it from [Chrome Web Store](https://chrome.google.com/webstore/detail/ubc
 
 * Works on both course index page & specific section page
 
-* Uses JSON scraped on both UBC courses page & Rate My Prof by [UBC-RMP-Data repo](https://github.com/jumbosushi/ubc-rmp-data)
+* Uses JSON data created by [UBC-RMP-Data repo](https://github.com/jumbosushi/ubc-rmp-data)
 
 * Call to action to create new professor profile if profile not found on RMP
 
