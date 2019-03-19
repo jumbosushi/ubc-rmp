@@ -41,6 +41,12 @@ Install it from [Chrome Web Store](https://chrome.google.com/webstore/detail/ubc
 3. Enable Developer Mode via a toggle
 4. Unpack the extension by selecting the cloned dir
 
+## Maintainer
+
+I'll be graduating soon, so looking for someone who's interested in maintaining
+this! If you're interested please send a short intro to
+`yatsushi@alumni.ubc.ca` with your GitHub link
+
 ## Why?
 
 A typical workflow of a UBC student when registering a course is:
