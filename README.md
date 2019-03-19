@@ -28,11 +28,11 @@ Install it from [Chrome Web Store](https://chrome.google.com/webstore/detail/ubc
 
 * Call to action to create new professor profile if profile not found on RMP
 
-![new_prof](https://user-images.githubusercontent.com/9669739/53614902-5e018c80-3b90-11e9-9eda-23bb5a13a149.gif)
+![new_prof](https://user-images.githubusercontent.com/9669739/54580835-26d00f80-49c7-11e9-9bac-d43a53c5a9c8.gif)
 
 * Call to action to add a review if no review found on existing profile
 
-![no_review](https://user-images.githubusercontent.com/9669739/53615069-0f082700-3b91-11e9-8684-e7e33b94bccb.gif)
+![no_review](https://user-images.githubusercontent.com/9669739/54580837-29cb0000-49c7-11e9-8563-fa8b79b7a603.gif)
 
 ## Development
 
