@@ -47,6 +47,9 @@ I'll be graduating soon, so looking for someone who's interested in maintaining
 this! If you're interested please send a short intro to
 `yatsushi@alumni.ubc.ca` with your GitHub link
 
+***Update***
+The maintainer of this app has been transferred to [Eric1015](https://github.com/Eric1015). He will be updating the data and adding new features to the app in the future.
+
 ## Why?
 
 A typical workflow of a UBC student when registering a course is:
