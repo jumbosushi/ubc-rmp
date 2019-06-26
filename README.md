@@ -15,7 +15,6 @@ Note: **Please be aware that ratings tend to be [flawed and biased](https://link
 
 ## Install
 
-
 <a href="https://chrome.google.com/webstore/detail/ubc-rmp/iggomdckinfebdknahdgknkkjcjcfcld/"><img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_128x128.png" width="48" /></a>
 
 Install it from [Chrome Web Store](https://chrome.google.com/webstore/detail/ubc-rmp/iggomdckinfebdknahdgknkkjcjcfcld/)
@@ -40,15 +39,6 @@ Install it from [Chrome Web Store](https://chrome.google.com/webstore/detail/ubc
 2. Open Chrome and go to `chrome://extensions`
 3. Enable Developer Mode via a toggle
 4. Unpack the extension by selecting the cloned dir
-
-## Maintainer
-
-I'll be graduating soon, so looking for someone who's interested in maintaining
-this! If you're interested please send a short intro to
-`yatsushi@alumni.ubc.ca` with your GitHub link
-
-***Update***
-The maintainer of this app has been transferred to [Eric1015](https://github.com/Eric1015). He will be updating the data and adding new features to the app in the future.
 
 ## Why?
 
